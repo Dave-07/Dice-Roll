@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><Dice-Roll></Dice-Roll></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<style>
+    body {
+        background-color: aliceblue;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+    }
+
+    h1 {
+        margin-top: 40px;
+        font-family: monospace;
+    }
+
+    button {
+        margin: 0 0 20px;
+        background-color: aqua;
+        padding: 10px 20px;
+        border-radius: 10px;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 1.3rem;
+        transform: scale(1);
+        filter: blur(1px);
+        transition: filter .7s, transform .3s;
+    }
+
+    button:active {
+        transform: scale(1.5);
+    }
+
+    button:hover {
+        filter: blur(0);
+    }
+
+    .history {
+        width: 80%;
+        min-height: 80px;
+        background-color: rgba(211, 211, 211, 0.4);
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 3s;
+    }
+
+    .container > i {
+        font-size: 4rem;
+        margin: 40px 0 20px;
+        z-index: 2;
+        color: white;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+    }
+
+    .color {
+        position: absolute;
+        left: 50%;
+        top: 55%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: block;
+        z-index: -1;
+    }
+
+    .history i {
+        position: absolute;
+        right: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 2rem;
+        text-align: center;
+        /* border-radius: 6px; */
+        /* box-shadow: 0 0 8px rgba(0, 0, 0, 0.8); */
+    }
+
+    .history span {
+        margin: 0 10px;
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: rgba(0, 0, 0, 0.468);
+        font-family: cursive;
+    }
+
+    .container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 80%;
+        height: 250px;
+        overflow: visible;
+        transition: 2s;
+    }
+
+    .rotateY {
+        animation-name: rotateY ;
+    }
+    .rotateX {
+        animation-name: rotateX ;
+    }
+
+    .roll-count {
+        color: red;
+        position: absolute;
+        margin: 0;
+        top: 230px;
+        left: 1312px;
+        font-family: cursive;
+        font-size: 1.2rem;
+    }
+
+    @keyframes rotateY {
+        0% {
+            transform: rotateY(0deg) ;
+        }
+
+        100% {
+            transform: rotateY(360deg) ;
+        }
+    }
+    
+    @keyframes rotateX {
+        0% {
+            transform: rotateX(0deg) ;
+        }
+
+        100% {
+            transform: rotateX(360deg) ;
+        }
+    }
+</style>
+
+<body>
+    <div class="container">
+        <h1>Dice Roll Simulator</h1>
+        <span class="roll-count">0</span>
+        <i class="fa-solid fa-dice-one"><span class="color"></span></i>
+        <button class="btn">Roll Dice</button>
+    </div>
+</body>
+<script>
+    const diceBtn = document.querySelector('.btn');
+    const dice = document.querySelector('i');
+    const container = document.querySelector('.container');
+    const color = document.querySelector('.color');
+    const rollCount = document.querySelector('.roll-count');
+    const diceArr = [{ num: 'one', color: 'red' }, { num: 'two', color: 'orange' }, { num: 'three', color: 'yellow' }, { num: 'four', color: 'green' }, { num: 'five', color: 'blue' }, { num: 'six', color: 'violet' }];
+
+    let roll = 1;
+
+    function diceRoll() {
+        const rand = Math.floor(Math.random() * 6) + 1;
+        const setColorEl = diceArr[rand - 1].color;
+        dice.className = `fa-solid fa-dice-${diceArr[rand - 1].num}`;
+        const newDiv = document.createElement('div');
+        newDiv.innerHTML = `
+        <div>
+            <span>Roll ${roll}: </span>
+            <i style="color: ${setColorEl}" class="fa-solid fa-dice-${diceArr[rand - 1].num}"></i>
+        </div>`;
+        setTimeout(() => {
+            newDiv.style.opacity = '.7';
+        }, 100);
+        newDiv.classList.add('history');
+        color.style.visibility = 'hidden';
+        color.style.backgroundColor = setColorEl;
+
+        if (roll % 2 == 0){
+            dice.classList.add('rotateY');
+        } else {
+            dice.classList.add('rotateX');
+        }
+       
+        setTimeout(() => {
+            dice.classList.remove('rotateY');
+            dice.classList.remove('rotateX');
+            color.style.visibility = 'visible';
+        }, 300);
+
+        container.appendChild(newDiv);
+        rollCount.innerText = roll;
+        roll++;   
+    }
+
+    diceBtn.addEventListener('click', diceRoll);
+</script>
+
+</html>
